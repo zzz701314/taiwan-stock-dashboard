@@ -1,0 +1,448 @@
+) format('truetype');
+  font-weight: 700;
+  font-display: swap;
+}
+
+:root {
+  --bg: #f3f5f7;
+  --surface: #ffffff;
+  --surface-2: #edf1f4;
+  --border: #dde3e9;
+  --text: #16202a;
+  --text-dim: #57677a;
+  --text-faint: #8b98a6;
+  --accent: #1f7f96;
+  --accent-soft: rgba(31,127,150,0.10);
+  --up: #c9392b;
+  --up-soft: rgba(201,57,43,0.10);
+  --up-strong: rgba(201,57,43,0.22);
+  --down: #1f8f63;
+  --down-soft: rgba(31,143,99,0.10);
+  --down-strong: rgba(31,143,99,0.22);
+  --gold: #a97a1f;
+  --gold-soft: rgba(169,122,31,0.12);
+  --shadow: 0 1px 2px rgba(20,30,40,0.06);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0a0e13;
+    --surface: #11161d;
+    --surface-2: #171e27;
+    --border: #232c37;
+    --text: #e7ecf1;
+    --text-dim: #8a99a8;
+    --text-faint: #5c6b7a;
+    --accent: #4fbcd8;
+    --accent-soft: rgba(79,188,216,0.10);
+    --up: #ea6455;
+    --up-soft: rgba(234,100,85,0.12);
+    --up-strong: rgba(234,100,85,0.24);
+    --down: #3dc088;
+    --down-soft: rgba(61,192,136,0.12);
+    --down-strong: rgba(61,192,136,0.24);
+    --gold: #d7ac4c;
+    --gold-soft: rgba(215,172,76,0.14);
+    --shadow: 0 1px 2px rgba(0,0,0,0.35);
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0a0e13;
+  --surface: #11161d;
+  --surface-2: #171e27;
+  --border: #232c37;
+  --text: #e7ecf1;
+  --text-dim: #8a99a8;
+  --text-faint: #5c6b7a;
+  --accent: #4fbcd8;
+  --accent-soft: rgba(79,188,216,0.10);
+  --up: #ea6455;
+  --up-soft: rgba(234,100,85,0.12);
+  --up-strong: rgba(234,100,85,0.24);
+  --down: #3dc088;
+  --down-soft: rgba(61,192,136,0.12);
+  --down-strong: rgba(61,192,136,0.24);
+  --gold: #d7ac4c;
+  --gold-soft: rgba(215,172,76,0.14);
+  --shadow: 0 1px 2px rgba(0,0,0,0.35);
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Microsoft JhengHei UI','Microsoft JhengHei','PingFang TC','Noto Sans TC',system-ui,sans-serif;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+.num { font-family: 'Ledger Mono', Consolas, 'SF Mono', monospace; font-variant-numeric: tabular-nums; }
+
+.wrap { max-width: 1180px; margin: 0 auto; padding: 28px 20px 60px; }
+
+/* ---------- Header ---------- */
+.masthead {
+  display: flex; align-items: baseline; justify-content: space-between;
+  flex-wrap: wrap; gap: 8px 20px;
+  padding-bottom: 16px; margin-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+}
+.masthead .brand { display: flex; align-items: baseline; gap: 10px; }
+.masthead h1 {
+  font-size: 21px; margin: 0; font-weight: 700; letter-spacing: 0.5px;
+}
+.masthead .tag {
+  font-size: 11px; color: var(--text-faint); letter-spacing: 1.5px; text-transform: uppercase;
+}
+.masthead .meta { font-size: 12.5px; color: var(--text-dim); text-align: right; }
+.masthead .meta b { color: var(--text); }
+.closed-pill {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 11px; padding: 2px 8px; border-radius: 20px;
+  background: var(--surface-2); color: var(--text-dim); border: 1px solid var(--border);
+  margin-left: 8px;
+}
+.closed-pill::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--text-faint); }
+
+/* ---------- Hero index band ---------- */
+.hero {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+  padding: 22px 24px; margin-bottom: 18px; box-shadow: var(--shadow);
+  display: grid; grid-template-columns: auto 1fr; gap: 24px; align-items: center;
+}
+.hero-index .eyebrow { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-faint); margin-bottom: 6px; }
+.hero-index .value { font-size: 46px; font-weight: 700; line-height: 1; }
+.hero-index .delta { font-size: 16px; margin-top: 8px; }
+.hero-index .delta.down { color: var(--down); }
+.hero-index .delta.up { color: var(--up); }
+.hero-divider { width: 1px; align-self: stretch; background: var(--border); }
+.hero-side { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+.hero-stat .eyebrow { font-size: 10.5px; letter-spacing: 1px; text-transform: uppercase; color: var(--text-faint); margin-bottom: 5px; }
+.hero-stat .v { font-size: 19px; font-weight: 700; }
+.hero-stat .s { font-size: 12px; color: var(--text-dim); margin-top: 2px; }
+
+/* ---------- Stat tile row ---------- */
+.tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 26px; }
+.tile {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+  padding: 16px 16px; box-shadow: var(--shadow);
+}
+.tile .eyebrow { font-size: 10.5px; letter-spacing: 1px; text-transform: uppercase; color: var(--text-faint); margin-bottom: 8px; }
+.tile .v { font-size: 22px; font-weight: 700; }
+.tile .v.up { color: var(--up); }
+.tile .v.down { color: var(--down); }
+.tile .s { font-size: 12px; color: var(--text-dim); margin-top: 4px; }
+
+/* ---------- Fear/Greed gauge ---------- */
+.gauge-tile { grid-column: span 1; }
+.gauge-wrap { display: flex; align-items: center; gap: 12px; }
+.gauge-num { font-size: 30px; font-weight: 700; }
+.gauge-track {
+  position: relative; height: 8px; border-radius: 5px; flex: 1;
+  background: linear-gradient(90deg, var(--down) 0%, var(--gold) 50%, var(--up) 100%);
+  opacity: 0.85;
+}
+.gauge-marker {
+  position: absolute; top: -3px; width: 3px; height: 14px; border-radius: 2px;
+  background: var(--text); box-shadow: 0 0 0 2px var(--surface);
+}
+.gauge-band { font-size: 12.5px; font-weight: 700; margin-top: 6px; }
+
+/* ---------- Section ---------- */
+section.block { margin-bottom: 30px; }
+.block-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 10px; flex-wrap: wrap; gap: 6px; }
+.block-head h2 { font-size: 15px; margin: 0; letter-spacing: 0.3px; }
+.block-head .note { font-size: 12px; color: var(--text-faint); }
+.eyebrow-label {
+  font-size: 10.5px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--accent);
+  font-weight: 700; margin-bottom: 4px; display: block;
+}
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+/* ---------- Table card ---------- */
+.tcard {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+  overflow: hidden; box-shadow: var(--shadow);
+}
+.tcard .thead {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 14px; border-bottom: 1px solid var(--border); background: var(--surface-2);
+}
+.tcard .thead .title { font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 7px; }
+.dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+.dot.up { background: var(--up); }
+.dot.down { background: var(--down); }
+.tcard .thead .count { font-size: 11.5px; color: var(--text-dim); }
+.tbl-scroll { overflow-x: auto; }
+table.data { width: 100%; border-collapse: collapse; font-size: 13px; }
+table.data th {
+  text-align: right; font-weight: 600; color: var(--text-faint); font-size: 10.5px;
+  letter-spacing: 0.5px; text-transform: uppercase; padding: 8px 12px; border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+table.data th:first-child, table.data th:nth-child(2) { text-align: left; }
+table.data td { padding: 7px 12px; border-bottom: 1px solid var(--border); text-align: right; white-space: nowrap; }
+table.data td:first-child { text-align: left; color: var(--text-faint); width: 1%; }
+table.data td:nth-child(2) { text-align: left; font-weight: 600; }
+table.data tr:last-child td { border-bottom: none; }
+table.data tr:hover td { background: var(--surface-2); }
+td.up { color: var(--up); font-weight: 700; }
+td.down { color: var(--down); font-weight: 700; }
+.limit-badge {
+  display: inline-block; font-size: 9.5px; font-weight: 700; padding: 1px 5px; border-radius: 4px;
+  margin-left: 6px; vertical-align: 1px;
+}
+.limit-badge.up { background: var(--up-strong); color: var(--up); }
+.limit-badge.down { background: var(--down-strong); color: var(--down); }
+
+/* mini 3-day bars */
+.spark { display: inline-flex; align-items: flex-end; gap: 2px; height: 20px; vertical-align: middle; }
+.spark i { display: block; width: 5px; border-radius: 1px; background: var(--text-faint); }
+.spark i.up { background: var(--up); }
+.spark i.down { background: var(--down); }
+
+/* ---------- Callout ---------- */
+.callout {
+  background: var(--gold-soft); border: 1px solid var(--border); border-left: 3px solid var(--gold);
+  border-radius: 6px; padding: 10px 14px; font-size: 12.5px; color: var(--text-dim); margin-bottom: 14px;
+}
+.callout b { color: var(--text); }
+
+/* ---------- Methodology ---------- */
+.method {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+  padding: 18px 20px; font-size: 12.5px; color: var(--text-dim);
+}
+.method h3 { font-size: 13px; color: var(--text); margin: 0 0 8px; }
+.method-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 12px; }
+.method-item .k { font-size: 11px; color: var(--text-faint); letter-spacing: 0.5px; text-transform: uppercase; }
+.method-item .v { font-size: 16px; font-weight: 700; color: var(--text); margin-top: 3px; }
+
+footer { margin-top: 30px; padding-top: 16px; border-top: 1px solid var(--border); font-size: 11.5px; color: var(--text-faint); }
+footer a { color: var(--accent); }
+footer .src-list { margin-top: 6px; display: flex; flex-wrap: wrap; gap: 4px 14px; }
+
+@media (max-width: 860px) {
+  .tiles { grid-template-columns: repeat(2, 1fr); }
+  .grid-2 { grid-template-columns: 1fr; }
+  .hero { grid-template-columns: 1fr; }
+  .hero-divider { display: none; }
+  .hero-side { grid-template-columns: repeat(3, 1fr); }
+  .method-grid { grid-template-columns: repeat(2, 1fr); }
+  .hero-index .value { font-size: 36px; }
+}
+</style>
+
+<div class="wrap">
+
+  <div class="masthead">
+    <div class="brand">
+      <h1>台股盤後戰情室</h1>
+      <span class="tag">Taiwan Market After-Close Desk</span>
+    </div>
+    <div class="meta">
+      資料基準日 <b>{{DATA_DATE_LABEL}}</b>{{CLOSED_PILL}}<br>
+      三大法人連續買賣超統計區間：{{RANGE_LABEL}}（3 個交易日）
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-index">
+      <div class="eyebrow">加權指數 TAIEX</div>
+      <div class="value num">{{TAIEX_CLOSE}}</div>
+      <div class="delta {{TAIEX_DIR_CLASS}} num">{{TAIEX_ARROW}} {{TAIEX_CHANGE_ABS}}　{{TAIEX_PCT}}</div>
+    </div>
+    <div class="hero-divider"></div>
+    <div class="hero-side">
+      <div class="hero-stat">
+        <div class="eyebrow">市場期望值（台指期近月）</div>
+        <div class="v num">{{TX_NEAR_SETTLE}}</div>
+        <div class="s">{{TX_NEAR_LABEL}}</div>
+      </div>
+      <div class="hero-stat">
+        <div class="eyebrow">市場期望值（次月合約）</div>
+        <div class="v num {{TX_NEXT_DIR_CLASS}}">{{TX_NEXT_SETTLE}}</div>
+        <div class="s">{{TX_NEXT_LABEL}}</div>
+      </div>
+      <div class="hero-stat">
+        <div class="eyebrow">三大法人合計</div>
+        <div class="v num {{INSTI_TOTAL_DIR_CLASS}}">{{INSTI_TOTAL}}</div>
+        <div class="s">{{INSTI_BREAKDOWN}}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STAT TILES -->
+  <div class="tiles">
+    <div class="tile gauge-tile">
+      <div class="eyebrow">恐懼貪婪指數（自製綜合指標）</div>
+      <div class="gauge-wrap">
+        <div class="gauge-num num">{{FG_SCORE}}</div>
+        <div class="gauge-track"><div class="gauge-marker" style="left:{{FG_SCORE}}%;"></div></div>
+      </div>
+      <div class="gauge-band" style="color:{{FG_COLOR}};">{{FG_BAND}}</div>
+    </div>
+    <div class="tile">
+      <div class="eyebrow">當日漲跌家數</div>
+      <div class="v num">{{ADV_COUNT}}<span style="color:var(--text-faint); font-weight:400;"> / </span>{{DEC_COUNT}}</div>
+      <div class="s"><span style="color:var(--up);">▲上漲{{ADV_COUNT}}</span>　<span style="color:var(--down);">▼下跌{{DEC_COUNT}}</span>　平盤{{FLAT_COUNT}}</div>
+    </div>
+    <div class="tile">
+      <div class="eyebrow">漲停 / 跌停家數</div>
+      <div class="v num"><span class="up">{{LIMIT_UP_COUNT}}</span> <span style="color:var(--text-faint); font-weight:400;">/</span> <span class="down">{{LIMIT_DOWN_COUNT}}</span></div>
+      <div class="s">{{LIMIT_NOTE}}</div>
+    </div>
+    <div class="tile">
+      <div class="eyebrow">三大法人合計買賣超</div>
+      <div class="v num {{INSTI_TOTAL_DIR_CLASS}}">{{INSTI_TOTAL}}</div>
+      <div class="s">連續3日：{{INSTI_TREND_NOTE}}</div>
+    </div>
+  </div>
+
+  <!-- GAINERS / LOSERS -->
+  <section class="block">
+    <div class="block-head">
+      <h2>盤後排行：漲幅前10大 vs 跌幅前10大</h2>
+      <div class="note">依當日漲跌幅（%）排序，不含 ETF／權證</div>
+    </div>
+    <div class="callout">{{GAINERS_LOSERS_CALLOUT}}</div>
+    <div class="grid-2">
+      <div class="tcard">
+        <div class="thead">
+          <div class="title"><span class="dot up"></span>漲幅前10大</div>
+          <div class="count">單位：元</div>
+        </div>
+        <div class="tbl-scroll">
+        <table class="data">
+          <thead><tr><th>代號</th><th>股名</th><th>收盤</th><th>漲跌</th><th>漲幅</th></tr></thead>
+          <tbody>
+{{GAINERS_ROWS}}
+          </tbody>
+        </table>
+        </div>
+      </div>
+
+      <div class="tcard">
+        <div class="thead">
+          <div class="title"><span class="dot down"></span>跌幅前10大</div>
+          <div class="count">單位：元</div>
+        </div>
+        <div class="tbl-scroll">
+        <table class="data">
+          <thead><tr><th>代號</th><th>股名</th><th>收盤</th><th>漲跌</th><th>跌幅</th></tr></thead>
+          <tbody>
+{{LOSERS_ROWS}}
+          </tbody>
+        </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOREIGN -->
+  <section class="block">
+    <div class="block-head">
+      <h2>外資：連續3日買超 vs 連續3日賣超　TOP10</h2>
+      <div class="note">單位：張（1張＝1,000股）・{{RANGE_LABEL_SHORT}}</div>
+    </div>
+    <div class="grid-2">
+      <div class="tcard">
+        <div class="thead">
+          <div class="title"><span class="dot up"></span>連續3日買超</div>
+          <div class="count">符合條件 {{FOREIGN_BUY_COUNT}} 檔，列前10</div>
+        </div>
+        <div class="tbl-scroll">
+        <table class="data">
+          <thead><tr><th>代號</th><th>股名</th><th>3日趨勢</th><th>合計買超</th></tr></thead>
+          <tbody>
+{{FOREIGN_BUY_ROWS}}
+          </tbody>
+        </table>
+        </div>
+      </div>
+
+      <div class="tcard">
+        <div class="thead">
+          <div class="title"><span class="dot down"></span>連續3日賣超</div>
+          <div class="count">符合條件 {{FOREIGN_SELL_COUNT}} 檔，列前10</div>
+        </div>
+        <div class="tbl-scroll">
+        <table class="data">
+          <thead><tr><th>代號</th><th>股名</th><th>3日趨勢</th><th>合計賣超</th></tr></thead>
+          <tbody>
+{{FOREIGN_SELL_ROWS}}
+          </tbody>
+        </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TRUST -->
+  <section class="block">
+    <div class="block-head">
+      <h2>投信：連續3日買超 vs 連續3日賣超　TOP10</h2>
+      <div class="note">單位：張（1張＝1,000股）・{{RANGE_LABEL_SHORT}}</div>
+    </div>
+    <div class="grid-2">
+      <div class="tcard">
+        <div class="thead">
+          <div class="title"><span class="dot up"></span>連續3日買超</div>
+          <div class="count">符合條件 {{TRUST_BUY_COUNT}} 檔，列前10</div>
+        </div>
+        <div class="tbl-scroll">
+        <table class="data">
+          <thead><tr><th>代號</th><th>股名</th><th>3日趨勢</th><th>合計買超</th></tr></thead>
+          <tbody>
+{{TRUST_BUY_ROWS}}
+          </tbody>
+        </table>
+        </div>
+      </div>
+
+      <div class="tcard">
+        <div class="thead">
+          <div class="title"><span class="dot down"></span>連續3日賣超</div>
+          <div class="count">符合條件 {{TRUST_SELL_COUNT}} 檔，列前10</div>
+        </div>
+        <div class="tbl-scroll">
+        <table class="data">
+          <thead><tr><th>代號</th><th>股名</th><th>3日趨勢</th><th>合計賣超</th></tr></thead>
+          <tbody>
+{{TRUST_SELL_ROWS}}
+          </tbody>
+        </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- METHODOLOGY -->
+  <section class="block">
+    <div class="method">
+      <span class="eyebrow-label">Methodology</span>
+      <h3>恐懼貪婪指數如何算出來的（自製版，非 CNN／MacroMicro 官方數值）</h3>
+      <div style="font-size:12.5px; line-height:1.7;">
+        由於官方 CNN Fear &amp; Greed 為美股專用，MacroMicro「台灣-MM恐懼與貪婪指數」則需即時訂閱資料、本頁未連線取得精確即時數值，故以台交所公開盤後數據自行編製一組 4 項綜合指標（0～100分，50為中性），方便對照當日盤面情緒，正式官方數據建議另行參考 MacroMicro 頁面。
+      </div>
+      <div class="method-grid">
+        <div class="method-item"><div class="k">① 市場寬度</div><div class="v num">{{FG_C1}}</div><div class="s" style="font-size:11.5px;color:var(--text-dim);">上漲家數 {{ADV_COUNT}}／({{ADV_COUNT}}+{{DEC_COUNT}})</div></div>
+        <div class="method-item"><div class="k">② 大盤動能</div><div class="v num">{{FG_C2}}</div><div class="s" style="font-size:11.5px;color:var(--text-dim);">當日{{TAIEX_PCT_ABS_LABEL}}，±3%為滿分區間</div></div>
+        <div class="method-item"><div class="k">③ 漲跌停家數比</div><div class="v num">{{FG_C3}}</div><div class="s" style="font-size:11.5px;color:var(--text-dim);">漲停{{LIMIT_UP_COUNT}}家 ／ ({{LIMIT_UP_COUNT}}+{{LIMIT_DOWN_COUNT}})家</div></div>
+        <div class="method-item"><div class="k">④ 法人資金流向</div><div class="v num">{{FG_C4}}</div><div class="s" style="font-size:11.5px;color:var(--text-dim);">三大法人合計{{INSTI_TOTAL_LABEL}}</div></div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    本頁資料截至 {{DATA_DATE_LABEL}} 台股收盤{{HOLIDAY_NOTE}}。連續買賣超統計採 {{RANGE_LABEL}} 三個交易日皆同向（買超或賣超）之個股，排除 ETF、權證與債券。恐懼貪婪指數為本頁自行編製之簡化情緒指標，僅供參考，不構成投資建議。頁面每日收盤後自動更新。
+    <div class="src-list">
+      <span>資料來源：</span>
+      <a href="https://www.twse.com.tw" target="_blank" rel="noopener">台灣證券交易所 TWSE OpenAPI</a>
+      <a href="https://www.taifex.com.tw" target="_blank" rel="noopener">台灣期貨交易所 TAIFEX</a>
+      <a href="https://www.macromicro.me/series/46964/taiwan-mm-fear-and-greed-index" target="_blank" rel="noopener">MacroMicro 台灣-MM恐懼與貪婪指數（官方版參考）</a>
+    </div>
+  </footer>
+
+</div>
