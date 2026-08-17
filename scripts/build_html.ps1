@@ -1,11 +1,11 @@
-# Builds dashboard.html from the data fetched by fetch_data.ps1.
+# Builds index.html from the data fetched by fetch_data.ps1.
 # Reads D:\台股分析 claude\data\*.json and D:\台股分析 claude\scripts\template\*
-# Outputs D:\台股分析 claude\dashboard.html
+# Outputs D:\台股分析 claude\index.html (index.html so GitHub Pages serves it at the site root)
 
 param(
     [string]$DataDir = "$PSScriptRoot\..\data",
     [string]$TemplateDir = "$PSScriptRoot\template",
-    [string]$OutFile = "$PSScriptRoot\..\dashboard.html"
+    [string]$OutFile = "$PSScriptRoot\..\index.html"
 )
 
 $ErrorActionPreference = "Stop"
@@ -51,7 +51,11 @@ $latestDt = [datetime]::ParseExact($dateD3,"yyyyMMdd",$null)
 $closedPill = ""
 $holidayNote = ""
 if ($today.Date -ne $latestDt.Date) {
-    $closedPill = "<span class=`"closed-pill`">$($today.ToString('MM/dd'))休市或非交易日</span>"
+    if ($today.DayOfWeek -eq [System.DayOfWeek]::Saturday -or $today.DayOfWeek -eq [System.DayOfWeek]::Sunday) {
+        $closedPill = "<span class=`"closed-pill`">$($today.ToString('MM/dd'))休市或非交易日</span>"
+    } else {
+        $closedPill = "<span class=`"closed-pill`">$($today.ToString('MM/dd'))資料尚未發布，顯示最近交易日</span>"
+    }
     $holidayNote = "（最近交易日）"
 }
 
