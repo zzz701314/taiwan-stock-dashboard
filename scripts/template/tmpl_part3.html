@@ -246,6 +246,45 @@ footer .src-list { margin-top: 6px; display: flex; flex-wrap: wrap; gap: 4px 14p
     </div>
   </div>
 
+  <!-- LIMIT STREAK -->
+  <section class="block">
+    <div class="block-head">
+      <h2>連續3日漲停 vs 連續3日跌停</h2>
+      <div class="note">單日漲跌幅≥9.5% 視為觸及漲/跌停・{{RANGE_LABEL_SHORT}}</div>
+    </div>
+    <div class="grid-2">
+      <div class="tcard">
+        <div class="thead">
+          <div class="title"><span class="dot up"></span>連續3日漲停</div>
+          <div class="count">符合條件 {{LIMITUP_STREAK_COUNT}} 檔</div>
+        </div>
+        <div class="tbl-scroll">
+        <table class="data">
+          <thead><tr><th>代號</th><th>股名</th><th>D1</th><th>D2</th><th>D3</th><th>收盤</th></tr></thead>
+          <tbody>
+{{LIMITUP_STREAK_ROWS}}
+          </tbody>
+        </table>
+        </div>
+      </div>
+
+      <div class="tcard">
+        <div class="thead">
+          <div class="title"><span class="dot down"></span>連續3日跌停</div>
+          <div class="count">符合條件 {{LIMITDOWN_STREAK_COUNT}} 檔</div>
+        </div>
+        <div class="tbl-scroll">
+        <table class="data">
+          <thead><tr><th>代號</th><th>股名</th><th>D1</th><th>D2</th><th>D3</th><th>收盤</th></tr></thead>
+          <tbody>
+{{LIMITDOWN_STREAK_ROWS}}
+          </tbody>
+        </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- HERO -->
   <div class="hero">
     <div class="hero-index">

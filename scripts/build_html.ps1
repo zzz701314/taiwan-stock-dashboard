@@ -119,6 +119,56 @@ $limitNote = if ($limitUpCount -gt $limitDownCount * 2) { "漲停家數遠多於
              elseif ($limitDownCount -gt $limitUpCount * 2) { "跌停家數遠多於漲停，弱勢股集中" }
              else { "漲跌停家數大致平衡" }
 
+# ---------- Limit-up / limit-down 3-day consecutive streaks ----------
+$stockDay0 = Get-Content "$DataDir\stock_day0.json" -Raw | ConvertFrom-Json  # latest (D3)
+$stockDay1 = Get-Content "$DataDir\stock_day1.json" -Raw | ConvertFrom-Json  # D2
+$stockDay2 = Get-Content "$DataDir\stock_day2.json" -Raw | ConvertFrom-Json  # D1 (oldest)
+
+function Load-PctMap($dayStocks) {
+    $map = @{}
+    foreach ($s in $dayStocks) {
+        if ($s.Code -notmatch '^[1-9]\d{3}$' -or $s.ClosingPrice -eq '' -or $s.Change -eq '') { continue }
+        $close = [double]$s.ClosingPrice
+        $chg = [double]$s.Change
+        $prevClose = $close - $chg
+        $pct = if ($prevClose -gt 0) { [math]::Round(($chg / $prevClose) * 100, 2) } else { 0 }
+        $map[$s.Code] = [PSCustomObject]@{ Name=($s.Name -replace '\s+$',''); Close=$close; Pct=$pct }
+    }
+    return $map
+}
+$sOld = Load-PctMap $stockDay2   # D1 oldest
+$sMid = Load-PctMap $stockDay1   # D2
+$sNew = Load-PctMap $stockDay0   # D3 latest
+
+$streakCodes = $sNew.Keys | Where-Object { $sMid.ContainsKey($_) -and $sOld.ContainsKey($_) }
+$streak3 = foreach ($c in $streakCodes) {
+    [PSCustomObject]@{
+        Code=$c; Name=$sNew[$c].Name
+        P1=$sOld[$c].Pct; P2=$sMid[$c].Pct; P3=$sNew[$c].Pct
+        Close=$sNew[$c].Close
+    }
+}
+$limitUpStreak = $streak3 | Where-Object { $_.P1 -ge 9.5 -and $_.P2 -ge 9.5 -and $_.P3 -ge 9.5 } | Sort-Object { $_.P1 + $_.P2 + $_.P3 } -Descending
+$limitDownStreak = $streak3 | Where-Object { $_.P1 -le -9.5 -and $_.P2 -le -9.5 -and $_.P3 -le -9.5 } | Sort-Object { $_.P1 + $_.P2 + $_.P3 }
+$limitUpStreakCount = $limitUpStreak.Count
+$limitDownStreakCount = $limitDownStreak.Count
+$limitUpStreakTop = $limitUpStreak | Select-Object -First 10
+$limitDownStreakTop = $limitDownStreak | Select-Object -First 10
+
+function Build-LimitStreakRows($rows, [bool]$isUp) {
+    if ($rows.Count -eq 0) {
+        return "            <tr><td colspan=`"6`" style=`"text-align:center;color:var(--text-faint);`">目前無符合條件個股</td></tr>"
+    }
+    $dirClass = if ($isUp) { "up" } else { "down" }
+    $sb = New-Object System.Text.StringBuilder
+    foreach ($r in $rows) {
+        [void]$sb.AppendLine("            <tr><td>$($r.Code)</td><td>$(HtmlEnc $r.Name)</td><td class=`"num $dirClass`">$(Pct $r.P1)</td><td class=`"num $dirClass`">$(Pct $r.P2)</td><td class=`"num $dirClass`">$(Pct $r.P3)</td><td class=`"num`">$('{0:N2}' -f $r.Close)</td></tr>")
+    }
+    return $sb.ToString().TrimEnd()
+}
+$limitUpStreakRows = Build-LimitStreakRows $limitUpStreakTop $true
+$limitDownStreakRows = Build-LimitStreakRows $limitDownStreakTop $false
+
 # ---------- Institutional 3-day consecutive flow ----------
 function Load-T86Map($t86obj) {
     $map = @{}
@@ -263,6 +313,9 @@ $replacements = @{
     "{{ADV_COUNT}}" = "$up"; "{{DEC_COUNT}}" = "$down"; "{{FLAT_COUNT}}" = "$flat"
     "{{LIMIT_UP_COUNT}}" = "$limitUpCount"; "{{LIMIT_DOWN_COUNT}}" = "$limitDownCount"
     "{{LIMIT_NOTE}}" = $limitNote
+    "{{LIMITUP_STREAK_COUNT}}" = "$limitUpStreakCount"; "{{LIMITDOWN_STREAK_COUNT}}" = "$limitDownStreakCount"
+    "{{LIMITUP_STREAK_ROWS}}" = $limitUpStreakRows
+    "{{LIMITDOWN_STREAK_ROWS}}" = $limitDownStreakRows
     "{{GAINERS_LOSERS_CALLOUT}}" = $gainersLosersCallout
     "{{GAINERS_ROWS}}" = $gainersRows
     "{{LOSERS_ROWS}}" = $losersRows
@@ -287,3 +340,4 @@ $final = $part1 + $consolaB64 + $part2 + $consolabB64 + $tmpl
 Write-Host "Built dashboard: $OutFile"
 Write-Host "TAIEX: $taiexClose ($(Pct $taiexPctVal)) | FG Score: $fgScore ($fgBand)"
 Write-Host "Gainers/Losers rows: $($gainers.Count)/$($losers.Count) | Foreign buy/sell candidates: $foreignBuyCount/$foreignSellCount | Trust buy/sell candidates: $trustBuyCount/$trustSellCount"
+Write-Host "Limit-up/down 3-day streaks: $limitUpStreakCount/$limitDownStreakCount"

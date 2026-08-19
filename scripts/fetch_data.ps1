@@ -64,19 +64,23 @@ $indexRows = $miResp.tables[0].data | ForEach-Object {
 }
 $indexRows | ConvertTo-Json -Depth 5 | Out-File "$OutDir\mi_index.json" -Encoding utf8
 
-Write-Host "== Fetching all-stock daily quotes (gainers/losers, breadth) =="
-$allBut = Invoke-RestMethod -Uri "https://www.twse.com.tw/rwd/zh/afterTrading/MI_INDEX?response=json&date=$latestDateStr&type=ALLBUT0999" -Headers $headers -TimeoutSec 30
-$stockTable = $allBut.tables[8]
-$stockDayAll = $stockTable.data | ForEach-Object {
-    $closingRaw = $_[8]
-    if ($closingRaw -match '^[\d,\.]+$') {
-        $sign = Get-ChangeSign $_[9]
-        $diff = [double](($_[10] -replace ',', ''))
-        [PSCustomObject]@{ Code = $_[0]; Name = $_[1]; ClosingPrice = ($closingRaw -replace ',', ''); Change = [string]($sign * $diff) }
-    } else {
-        [PSCustomObject]@{ Code = $_[0]; Name = $_[1]; ClosingPrice = ''; Change = '' }
+function Get-AllBut0999Stocks([string]$dateStr) {
+    $allBut = Invoke-RestMethod -Uri "https://www.twse.com.tw/rwd/zh/afterTrading/MI_INDEX?response=json&date=$dateStr&type=ALLBUT0999" -Headers $headers -TimeoutSec 30
+    $stockTable = $allBut.tables[8]
+    return $stockTable.data | ForEach-Object {
+        $closingRaw = $_[8]
+        if ($closingRaw -match '^[\d,\.]+$') {
+            $sign = Get-ChangeSign $_[9]
+            $diff = [double](($_[10] -replace ',', ''))
+            [PSCustomObject]@{ Code = $_[0]; Name = $_[1]; ClosingPrice = ($closingRaw -replace ',', ''); Change = [string]($sign * $diff) }
+        } else {
+            [PSCustomObject]@{ Code = $_[0]; Name = $_[1]; ClosingPrice = ''; Change = '' }
+        }
     }
 }
+
+Write-Host "== Fetching all-stock daily quotes (gainers/losers, breadth) =="
+$stockDayAll = Get-AllBut0999Stocks $latestDateStr
 $stockDayAll | ConvertTo-Json -Depth 5 | Out-File "$OutDir\stock_day_all.json" -Encoding utf8
 
 function Test-T86Date([string]$dateStr) {
@@ -112,6 +116,12 @@ for ($i = 0; $i -lt 3; $i++) {
     $foundDates[$i].Data | ConvertTo-Json -Depth 5 | Out-File "$OutDir\t86_day$i.json" -Encoding utf8
 }
 $foundDates | ForEach-Object { $_.DateStr } | Out-File "$OutDir\t86_dates.txt" -Encoding utf8
+
+Write-Host "== Fetching per-stock quotes for the same 3 trading days (for consecutive limit-up/down streaks) =="
+for ($i = 0; $i -lt 3; $i++) {
+    $dayStocks = if ($foundDates[$i].DateStr -eq $latestDateStr) { $stockDayAll } else { Get-AllBut0999Stocks $foundDates[$i].DateStr }
+    $dayStocks | ConvertTo-Json -Depth 5 | Out-File "$OutDir\stock_day$i.json" -Encoding utf8
+}
 
 Write-Host "== Fetching market-wide institutional NT`$ totals (BFI82U) =="
 $bfi = Invoke-RestMethod -Uri "https://www.twse.com.tw/rwd/zh/fund/BFI82U?response=json&dayDate=$($foundDates[0].DateStr)&type=day" -Headers $headers -TimeoutSec 30
